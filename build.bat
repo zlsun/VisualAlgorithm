@@ -1,0 +1,1 @@
+pyinstaller main_window.pyw -i ./icons/icon.ico --onefile --noconsole
