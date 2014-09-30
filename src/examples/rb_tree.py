@@ -191,8 +191,8 @@ def tree_search(tree, data):
 
 
 tree = Tree()
-tree.add_mark('x', 0x00ff00)
-tree.add_mark('z', 0x0000ff)
+tree.bind('x', 0x00ff00)
+tree.bind('z', 0x0000ff)
 lst = [1, 16, 21, 11, 8, 7, 10, 3, 4, 20, 17, 13, 2, 12, 10, 19, 5, 13, 3, 4, 20, 18] * 3
 tree_build(tree, lst)
 

@@ -16,10 +16,10 @@ class TreeNode(object):
     def children(self):
         return iter()
 
-    def get_pen_color(self, tree):
+    def get_pen(self, tree):
         return None
 
-    def get_brush_color(self, tree):
+    def get_brush(self, tree):
         return None
 
     def plot(self, tree, painter, width, layer_height, pos=None):
@@ -30,10 +30,10 @@ class TreeNode(object):
         rect.moveCenter(pos)
 
         painter.setPen(QColor(0x000000))
-        painter.setBrush(tree.get_brush_color(self))
+        painter.setBrush(tree.get_brush(self))
         painter.drawEllipse(rect)
 
-        painter.setPen(tree.get_pen_color(self))
+        painter.setPen(tree.get_pen(self))
         painter.drawText(rect, Qt.AlignCenter, str(self.data))
 
     def get_height(self):
@@ -47,8 +47,8 @@ class BinaryTreeNode(TreeNode):
         self.left = None
         self.right = None
 
-    def get_pen_color(self, tree):
-        return TreeNode.get_pen_color(self, tree) or QColor(0x000000)
+    def get_pen(self, tree):
+        return TreeNode.get_pen(self, tree) or QColor(0x000000)
 
     @property
     def uncle(self):
@@ -93,10 +93,10 @@ class RBTreeNode(BinaryTreeNode):
     def __nonzero__(self):
         return self != None and self != self.NIL
 
-    def get_pen_color(self, tree):
+    def get_pen(self, tree):
         return QColor(0xffffff)
 
-    def get_brush_color(self, tree):
+    def get_brush(self, tree):
         return QColor(0x000000 if self.color else 0xff0000)
 
 RBTreeNode.NIL = RBTreeNode("NIL", color=RBTreeNode.BLACK)
@@ -108,11 +108,11 @@ class Tree(Base):
         Base.__init__(self)
         self.root = None
 
-    def get_pen_color(self, node):
-        return Base.get_pen_color(self, node) or node.get_pen_color(self) or QColor(0x000000)
+    def get_pen(self, node):
+        return Base.get_pen(self, node) or node.get_pen(self) or QColor(0x000000)
 
-    def get_brush_color(self, node):
-        return Base.get_brush_color(self, node) or node.get_brush_color(self) or QColor(0xffffff)
+    def get_brush(self, node):
+        return Base.get_brush(self, node) or node.get_brush(self) or QColor(0xffffff)
 
     def get_height(self):
         return self.root.get_height()

@@ -20,5 +20,5 @@ class Visualization(QWidget):
 
     def updateValue(self, value, f_globals, f_locals):
         self.value = value
-        self.value.update_mark(f_globals, f_locals)
+        self.value.update_bind(f_globals, f_locals)
         self.update()

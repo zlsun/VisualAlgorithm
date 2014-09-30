@@ -24,14 +24,14 @@ class Matrix(Base):
             r, c = i
             self.value[r][c] = value
 
-    def add_color(self, data, color):
+    def bind_color(self, data, color):
         self.color_map[data] = color
 
-    def get_pen_color(self, index):
-        return Base.get_pen_color(self, index) or QColor(0x000000)
+    def get_pen(self, index):
+        return Base.get_pen(self, index) or QColor(0x000000)
 
-    def get_brush_color(self, pos):
-        color = Base.get_brush_color(self, pos)
+    def get_brush(self, pos):
+        color = Base.get_brush(self, pos)
         if color:
             return color
         data = self[pos]
@@ -54,8 +54,8 @@ class Matrix(Base):
         for i in range(rows):
             x = 0
             for j in range(cols):
-                painter.setPen(self.get_pen_color((i, j)))
-                painter.setBrush(self.get_brush_color((i, j)))
+                painter.setPen(self.get_pen((i, j)))
+                painter.setBrush(self.get_brush((i, j)))
                 painter.drawRect(x, y, tile_size, tile_size)
                 x += tile_size
             y += tile_size

@@ -39,7 +39,7 @@ class MainWindow(QMainWindow):
         QMainWindow.__init__(self, parent)
         self.debugger = None
         self.setupUi()
-        
+
         if DEBUG:
             for f, v in [('sort', 'L'), ('maze', 'maze'), ('binary_tree', 'tree'), ('rb_tree', 'tree')]:
                 filePath = './examples/%s.py' % f
@@ -77,7 +77,7 @@ class MainWindow(QMainWindow):
     def addTab(self, title):
         tab = QWidget()
         tab.filePath = None
-        
+
         layout = QHBoxLayout(tab)
         layout.setContentsMargins(5, 5, 5, 5)
 
@@ -131,7 +131,7 @@ class MainWindow(QMainWindow):
             'Resume':    A(u'暂停(&E)',      self.pause,     QKeySequence('F6'),           'pause.png'     ),
             'Stop':      A(u'停止(&S)',      self.stop,      QKeySequence('F12'),          'stop.png'      ),
             'About':     A(u'关于(&A)',      self.about                                                    ),
-            'AddVisualization': 
+            'AddVisualization':
                 A(u'添加可视化变量(&A)', self.addVisualization, QKeySequence('F2')),
         }
         self.__dict__.update({'action%s' % k: v for k, v in actions.items()})
@@ -232,40 +232,6 @@ class MainWindow(QMainWindow):
         if self.debugger:
             self.debugger.setTimeout(timeout)
 
-    @checkTab
-    def onLineCallback(self, frame):
-        # print "onLineCallback in", int(QThread.currentThreadId()), 'on', time()
-        tab.editor.highlightLine(frame.f_lineno - 1)
-        for v in tab.board.getVisualizations():
-            f_globals = frame.f_globals
-            f_locals = frame.f_locals
-            name = v.name
-            if name in f_locals:
-                value = f_locals[name]
-            elif name in f_globals:
-                value = f_globals[name]
-            else:
-                value = Base()
-            v.updateValue(value, f_globals, f_locals)
-
-    def onException(self, exc_info):
-        import traceback
-        import io
-
-        with io.BytesIO() as output:
-            exc_type, exc_value, exc_traceback = exc_info
-            exc_traceback = exc_traceback.tb_next.tb_next
-            traceback.print_exception(exc_type, exc_value, exc_traceback, limit=10, file=output)
-            msgBox = QMessageBox()
-            msgBox.setWindowTitle(u'Error')
-            msgBox.setText(output.getvalue() )
-            msgBox.setButtonText(QMessageBox.Ok, u'关闭(&C)')
-            msgBox.exec_()
-
-    @checkTab
-    def onQuit(self):
-        tab.editor.clearSelection()
-
     def newFile(self):
         self.addTab(UNTITLED)
 
@@ -325,6 +291,40 @@ class MainWindow(QMainWindow):
         locals()[f] = checkTab(lambda self, f=f: tab.editor.__getattribute__(f)())
 
     @checkTab
+    def onLineCallback(self, frame):
+        # print "onLineCallback in", int(QThread.currentThreadId()), 'on', time()
+        tab.editor.highlightLine(frame.f_lineno - 1)
+        for v in tab.board.getVisualizations():
+            f_globals = frame.f_globals
+            f_locals = frame.f_locals
+            name = v.name
+            if name in f_locals:
+                value = f_locals[name]
+            elif name in f_globals:
+                value = f_globals[name]
+            else:
+                value = Base()
+            v.updateValue(value, f_globals, f_locals)
+
+    @checkTab
+    def onQuit(self):
+        tab.editor.clearSelection()
+
+    def onException(self, exc_info):
+        import traceback
+        import io
+
+        with io.BytesIO() as output:
+            exc_type, exc_value, exc_traceback = exc_info
+            exc_traceback = exc_traceback.tb_next.tb_next
+            traceback.print_exception(exc_type, exc_value, exc_traceback, limit=10, file=output)
+            msgBox = QMessageBox()
+            msgBox.setWindowTitle(u'Error')
+            msgBox.setText(output.getvalue() )
+            msgBox.setButtonText(QMessageBox.Ok, u'关闭(&C)')
+            msgBox.exec_()
+
+    @checkTab
     def run(self, step_mode=False):
         print "run in", int(QThread.currentThreadId()), 'on', time()
         if not self.debugger or not self.debugger.running:
@@ -357,12 +357,12 @@ class MainWindow(QMainWindow):
         msgBox.setWindowTitle(APP_NAME)
         msgBox.setIconPixmap(QPixmap(APP_ICON_PATH))
         msgBox.setText(u'''
-            <br/>            
+            <br/>
             <h1 align='center'> VisualAlgorithm </h1>
             <p align='right'>
                 <h2> v1.0.0 </h2>
             </p>
-            <br/>            
+            <br/>
             <p align='center'> Made by zl@sun </p>
         ''')
         msgBox.setButtonText(QMessageBox.Ok, u'关闭(&C)')

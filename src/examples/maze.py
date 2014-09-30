@@ -25,9 +25,9 @@ start = (0, 0)
 end = (7, 12)
 visited = 2
 on_path = 3
-maze.add_color(visited, 0x0000ff)
-maze.add_color(on_path, 0x00ff00)
-maze.add_mark('pos', 0xff0000)
+maze.bind_color(visited, 0x0000ff)
+maze.bind_color(on_path, 0x00ff00)
+maze.bind('pos', 0xff0000)
 
 def dfs(pos=start):
     if not (0 <= pos[0] < rows and 0 <= pos[1] < cols) or maze[pos]:

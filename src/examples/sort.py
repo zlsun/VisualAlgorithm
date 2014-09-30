@@ -9,11 +9,11 @@ N = 100
 L = List([randrange(N) for _ in range(N)])
 n = len(L)
 
-L.add_mark('i', 0x00ff00)
-L.add_mark('j', 0x0000ff)
-L.add_mark('p', 0xff0000)
-L.add_mark('r', 0xffff00)
-L.add_mark('max', 0xff0000)
+L.bind('i', 0x00ff00)
+L.bind('j', 0x0000ff)
+L.bind('p', 0xff0000)
+L.bind('r', 0xffff00)
+L.bind('max', 0xff0000)
 
 
 def bubble_sort(L):
