@@ -1,5 +1,5 @@
 
-from random import shuffle
+from random import shuffle, randrange
 from time import sleep
 
 from structures import Tree, BinaryTreeNode
@@ -44,7 +44,9 @@ def tree_search(tree, data):
 tree = Tree()
 tree.bind('x', 0x00ff00)
 tree.bind('z', 0xff0000)
-lst = [1, 16, 21, 11, 8, 7, 10, 3, 4, 20, 17, 13, 2, 12, 10, 19, 5, 13, 3, 4, 20, 18]
+
+N = 50
+lst = [randrange(N) for _ in range(N)]
 tree_build(tree, lst)
 
 sleep(1)

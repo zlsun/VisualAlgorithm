@@ -6,7 +6,8 @@ from random import randrange
 from structures import List
 
 N = 100
-L = List([randrange(N) for _ in range(N)])
+lst = [randrange(N) for _ in range(N)]
+L = List(lst)
 n = len(L)
 
 L.bind('i', 0x00ff00)
