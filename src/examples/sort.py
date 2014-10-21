@@ -87,12 +87,11 @@ sleep(1)
 def quick_sort(L, p=0, r=n - 1):
     if p < r:
         x = L[r]
-        i = p - 1
+        i = p
         for j in range(p, r + 1):
             if L[j] < x:
-                i += 1
                 L[i], L[j] = L[j], L[i]
-        i += 1
+                i += 1
         L[i], L[r] = L[r], L[i]
         quick_sort(L, p, i - 1)
         quick_sort(L, i + 1, r)
