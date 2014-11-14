@@ -1,7 +1,5 @@
 #-*- encoding: utf-8 -*-
 
-from os import chdir, listdir
-from os.path import split
 from time import time
 
 from PyQt4.QtCore import *
@@ -23,8 +21,10 @@ APP_ICON_PATH = ICONS_PATH + u'icon.png'
 def qstring2str(qstr):
     return unicode(qstr, 'u8', 'ignore').encode('u8')
 
+
 def strippedName(filePath):
     return QFileInfo(filePath).fileName() if filePath else UNTITLED
+
 
 def addActionsTo(target, actions):
     for action in actions:
@@ -32,6 +32,7 @@ def addActionsTo(target, actions):
             target.addSeparator()
         else:
             target.addAction(action)
+
 
 class MainWindow(QMainWindow):
 
@@ -41,7 +42,12 @@ class MainWindow(QMainWindow):
         self.setupUi()
 
         if DEBUG:
-            for f, v in [('sort', 'L'), ('maze', 'maze'), ('binary_tree', 'tree'), ('rb_tree', 'tree')]:
+            for f, v in [
+                    ('sort', 'L'),
+                    ('maze', 'maze'),
+                    ('binary_tree', 'tree'),
+                    ('rb_tree', 'tree')
+                ]:
                 filePath = './examples/%s.py' % f
                 tab = self.addTab(strippedName(filePath))
                 tab.filePath = filePath
@@ -87,9 +93,18 @@ class MainWindow(QMainWindow):
         tab.editor = Editor(splitter)
         tab.editor.setContextMenu(self.context_menu)
         tab.editor.cursorPositionChanged.connect(
-            lambda line, index: self.indicatorLabel.setText(u'第 %d 行, 第 %d 列' % (line + 1, index + 1)))
+            lambda line, index:
+                self.indicatorLabel.setText(
+                    u'第 %d 行, 第 %d 列' % (line + 1, index + 1)
+                )
+        )
         tab.editor.modificationChanged.connect(
-            lambda m: self.tabWidget.setTabText(self.tabWidget.indexOf(tab), title + ' *' * m))
+            lambda m:
+                self.tabWidget.setTabText(
+                    self.tabWidget.indexOf(tab),
+                    title + ' *' * m
+                )
+        )
 
         tab.board = Board(splitter)
 
@@ -106,31 +121,35 @@ class MainWindow(QMainWindow):
             self.connect(action, SIGNAL('triggered()'), slot)
             if shortcut:
                 action.setShortcut(shortcut)
-                action.setToolTip("%s (%s)" %
-                                 (text[:text.find('(')].replace('...', ''), action.shortcut().toString()))
+                action.setToolTip(
+                    "%s (%s)" % (
+                        text[:text.find('(')].replace('...', ''),
+                        action.shortcut().toString()
+                    )
+                )
             if icon:
                 action.setIcon(QIcon(ICONS_PATH + icon))
             return action
 
         actions = {
-            'New':       A(u'新建(&N)',      self.newFile,   QKeySequence.New,             'new.png'       ),
-            'Open':      A(u'打开...(&O)',   self.openFiles, QKeySequence.Open,            'open.png'      ),
-            'Close':     A(u'关闭(&C)',      self.closeFile, QKeySequence('ctrl+w'),       'close.png'     ),
-            'CloseAll':  A(u'关闭全部(&E)',  self.closeAll,  QKeySequence('ctrl+shift+w'), 'closeAll.png'  ),
-            'Save':      A(u'保存(&S)',      self.saveFile,  QKeySequence.Save,            'fileSave.png'  ),
+            'New':       A(u'新建(&N)',      self.newFile,   QKeySequence.New,             'new.png'),
+            'Open':      A(u'打开...(&O)',   self.openFiles, QKeySequence.Open,            'open.png'),
+            'Close':     A(u'关闭(&C)',      self.closeFile, QKeySequence('ctrl+w'),       'close.png'),
+            'CloseAll':  A(u'关闭全部(&E)',  self.closeAll,  QKeySequence('ctrl+shift+w'), 'closeAll.png'),
+            'Save':      A(u'保存(&S)',      self.saveFile,  QKeySequence.Save,            'fileSave.png'),
             'SaveAll':   A(u'另存为...(&A)', self.saveAs,    QKeySequence('ctrl+shift+s'), 'fileSaveAs.png'),
-            'Quit':      A(u'退出(&Q)',      self.close,     QKeySequence('ctrl+q')                        ),
-            'Undo':      A(u'撤销(&U)',      self.undo,      QKeySequence.Undo,            'editUndo.png'  ),
-            'Redo':      A(u'重做(&R)',      self.redo,      QKeySequence.Redo,            'editRedo.png'  ),
-            'Cut':       A(u'剪切(&X)',      self.cut,       QKeySequence.Cut,             'editCut.png'   ),
-            'Copy':      A(u'复制(&C)',      self.copy,      QKeySequence.Copy,            'editCopy.png'  ),
-            'Paste':     A(u'粘贴(&P)',      self.paste,     QKeySequence.Paste,           'editPaste.png' ),
-            'SeleteAll': A(u'全选(&A)',      self.selectAll, QKeySequence.SelectAll                        ),
-            'Run':       A(u'运行(&R)',      self.run,       QKeySequence('F5'),           'run.png'       ),
-            'Step':      A(u'单步(&P)',      self.step,      QKeySequence('F11'),          'step.png'      ),
-            'Resume':    A(u'暂停(&E)',      self.pause,     QKeySequence('F6'),           'pause.png'     ),
-            'Stop':      A(u'停止(&S)',      self.stop,      QKeySequence('F12'),          'stop.png'      ),
-            'About':     A(u'关于(&A)',      self.about                                                    ),
+            'Quit':      A(u'退出(&Q)',      self.close,     QKeySequence('ctrl+q')),
+            'Undo':      A(u'撤销(&U)',      self.undo,      QKeySequence.Undo,            'editUndo.png'),
+            'Redo':      A(u'重做(&R)',      self.redo,      QKeySequence.Redo,            'editRedo.png'),
+            'Cut':       A(u'剪切(&X)',      self.cut,       QKeySequence.Cut,             'editCut.png'),
+            'Copy':      A(u'复制(&C)',      self.copy,      QKeySequence.Copy,            'editCopy.png'),
+            'Paste':     A(u'粘贴(&P)',      self.paste,     QKeySequence.Paste,           'editPaste.png'),
+            'SeleteAll': A(u'全选(&A)',      self.selectAll, QKeySequence.SelectAll),
+            'Run':       A(u'运行(&R)',      self.run,       QKeySequence('F5'),           'run.png'),
+            'Step':      A(u'单步(&P)',      self.step,      QKeySequence('F11'),          'step.png'),
+            'Resume':    A(u'暂停(&E)',      self.pause,     QKeySequence('F6'),           'pause.png'),
+            'Stop':      A(u'停止(&S)',      self.stop,      QKeySequence('F12'),          'stop.png'),
+            'About':     A(u'关于(&A)',      self.about),
             'AddVisualization':
                 A(u'添加可视化变量(&A)', self.addVisualization, QKeySequence('F2')),
         }
@@ -236,8 +255,11 @@ class MainWindow(QMainWindow):
         self.addTab(UNTITLED)
 
     def openFiles(self):
-        filePaths = QFileDialog.getOpenFileNames(self, caption=u'打开文件',
-                                                 filter=u'Python文件 (*.py *.pyw);;所有文件 (*.*)')
+        filePaths = QFileDialog.getOpenFileNames(
+            self,
+            caption=u'打开文件',
+            filter=u'Python文件 (*.py *.pyw);;所有文件 (*.*)'
+        )
         if not filePaths:
             return
         for filePath in filePaths:
@@ -279,20 +301,27 @@ class MainWindow(QMainWindow):
 
     @checkTab
     def saveAs(self):
-        filePath = QFileDialog.getSaveFileName(self, caption=u'另存为',
-                                               filter=u'Python文件 (*.py *.pyw);;所有文件 (*.*)')
+        filePath = QFileDialog.getSaveFileName(
+            self,
+            caption=u'另存为',
+            filter=u'Python文件 (*.py *.pyw);;所有文件 (*.*)'
+        )
         if not filePath:
             return False
         tab.filePath = filePath
-        self.tabWidget.setTabText(self.tabWidget.currentIndex(), strippedName(tab.filePath))
+        self.tabWidget.setTabText(
+            self.tabWidget.currentIndex(), strippedName(tab.filePath))
         return self.saveTab(tab)
 
     for f in ['undo', 'redo', 'cut', 'copy', 'paste', 'selectAll']:
-        locals()[f] = checkTab(lambda self, f=f: tab.editor.__getattribute__(f)())
+        locals()[f] = checkTab(
+            lambda self, f=f: tab.editor.__getattribute__(f)()
+        )
 
     @checkTab
     def onLineCallback(self, frame):
-        # print "onLineCallback in", int(QThread.currentThreadId()), 'on', time()
+        # print "onLineCallback in", int(QThread.currentThreadId()), 'on',
+        # time()
         tab.editor.highlightLine(frame.f_lineno - 1)
         for v in tab.board.getVisualizations():
             f_globals = frame.f_globals
@@ -317,10 +346,16 @@ class MainWindow(QMainWindow):
         with io.BytesIO() as output:
             exc_type, exc_value, exc_traceback = exc_info
             exc_traceback = exc_traceback.tb_next.tb_next
-            traceback.print_exception(exc_type, exc_value, exc_traceback, limit=10, file=output)
+            traceback.print_exception(
+                exc_type,
+                exc_value,
+                exc_traceback,
+                limit=10,
+                file=output
+            )
             msgBox = QMessageBox()
             msgBox.setWindowTitle(u'Error')
-            msgBox.setText(output.getvalue() )
+            msgBox.setText(output.getvalue())
             msgBox.setButtonText(QMessageBox.Ok, u'关闭(&C)')
             msgBox.exec_()
 
@@ -329,7 +364,11 @@ class MainWindow(QMainWindow):
         print "run in", int(QThread.currentThreadId()), 'on', time()
         if not self.debugger or not self.debugger.running:
             script = qstring2str(tab.editor.text())
-            self.debugger = Debugger(script, timeout=self.slider.value(), step_mode=step_mode)
+            self.debugger = Debugger(
+                script,
+                timeout=self.slider.value(),
+                step_mode=step_mode
+            )
             self.debugger.onLineCallback.connect(self.onLineCallback)
             self.debugger.onQuit.connect(self.onQuit)
             self.debugger.onException.connect(self.onException)

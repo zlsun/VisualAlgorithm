@@ -117,10 +117,10 @@ class Tree(Base):
     def get_height(self):
         return self.root.get_height()
 
-    def rotate(self, node, right):
+    def rotate(self, node, is_right):
         parent = node.parent
 
-        if right:
+        if is_right:
             child = node.left
             grandchild = child.right
             node.left = grandchild
@@ -146,10 +146,10 @@ class Tree(Base):
             self.root = child
 
     def rotate_right(self, node):
-        self.rotate(node, right=True)
+        self.rotate(node, is_right=True)
 
     def rotate_left(self, node):
-        self.rotate(node, right=False)
+        self.rotate(node, is_right=False)
 
     def draw(self, visualization, painter):
         w, h = visualization.width(), visualization.height()

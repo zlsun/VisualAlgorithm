@@ -1,7 +1,10 @@
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from PyQt4.Qsci import QsciScintilla, QsciLexerPython
+from PyQt4.Qsci import (
+    QsciScintilla,
+    QsciLexerPython
+)
 
 
 class Editor(QsciScintilla):
@@ -20,10 +23,10 @@ class Editor(QsciScintilla):
         self.setIndentationGuides(True)
         self.setIndentationsUseTabs(False)
         self.setBackspaceUnindents(True)
-        
+
         self.setWrapMode(QsciScintilla.WrapWord)
         self.setWrapIndentMode(QsciScintilla.WrapIndentIndented)
-        
+
         self.setBraceMatching(QsciScintilla.SloppyBraceMatch)
         self.setFolding(QsciScintilla.PlainFoldStyle)
 
@@ -31,11 +34,17 @@ class Editor(QsciScintilla):
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.customContextMenuRequested.connect(self.onContextMenuRequested)
 
-        self.linesChanged.connect(lambda: self.setMarginWidth(1, ' %d' % self.lines()))
+        self.linesChanged.connect(
+            lambda: self.setMarginWidth(1, ' %d' % self.lines())
+        )
 
     def highlightLine(self, lineno):
-        self.setSelection(lineno, 0, lineno, len(
-            self.text(lineno).replace('\r', '').replace('\n', '')))
+        self.setSelection(
+            lineno,
+            0,
+            lineno,
+            len(self.text(lineno).replace('\r', '').replace('\n', ''))
+        )
 
     def clearSelection(self):
         self.setSelection(0,  0,  0,  0)

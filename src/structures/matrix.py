@@ -48,7 +48,9 @@ class Matrix(Base):
         tile_size = min(w / cols, h / rows)
 
         painter.translate(
-            (w - tile_size * cols) / 2, (h - tile_size * rows) / 2)
+            (w - tile_size * cols) / 2,
+            (h - tile_size * rows) / 2
+        )
         painter.scale(1, 1)
         y = 0
         for i in range(rows):
