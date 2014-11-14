@@ -6,7 +6,7 @@
 			"name": "Run main_window.py",
 			"shell": true,
 			"shell_cmd": "python -u main_window.pyw",
-			"working_dir": "$project_path"
+			"working_dir": "$project_path/src"
 		}
 	],
 	"folders":
