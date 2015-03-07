@@ -3,11 +3,11 @@
 from time import time
 
 from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt4.QtGui  import *
 
-from debugger import Debugger
-from editor import Editor
-from board import Board
+from debugger   import Debugger
+from editor     import Editor
+from board      import Board
 from structures import Base
 
 DEBUG = True
@@ -24,14 +24,6 @@ def qstring2str(qstr):
 
 def strippedName(filePath):
     return QFileInfo(filePath).fileName() if filePath else UNTITLED
-
-
-def addActionsTo(target, actions):
-    for action in actions:
-        if not action:
-            target.addSeparator()
-        else:
-            target.addAction(action)
 
 
 class MainWindow(QMainWindow):
@@ -115,6 +107,13 @@ class MainWindow(QMainWindow):
 
         return tab
 
+    def addActionsTo(self, target, actions):
+        for act in actions.split():
+            if act == '|':
+                target.addSeparator()
+            else:
+                target.addAction(self.actions[act])
+
     def createActions(self):
         def A(text, slot, shortcut=None, icon=None):
             action = QAction(text, self)
@@ -122,7 +121,7 @@ class MainWindow(QMainWindow):
             if shortcut:
                 action.setShortcut(shortcut)
                 action.setToolTip(
-                    "%s (%s)" % (
+                    '%s (%s)' % (
                         text[:text.find('(')].replace('...', ''),
                         action.shortcut().toString()
                     )
@@ -131,7 +130,7 @@ class MainWindow(QMainWindow):
                 action.setIcon(QIcon(ICONS_PATH + icon))
             return action
 
-        actions = {
+        self.actions = {
             'New':       A(u'新建(&N)',      self.newFile,   QKeySequence.New,             'new.png'),
             'Open':      A(u'打开...(&O)',   self.openFiles, QKeySequence.Open,            'open.png'),
             'Close':     A(u'关闭(&C)',      self.closeFile, QKeySequence('ctrl+w'),       'close.png'),
@@ -150,57 +149,27 @@ class MainWindow(QMainWindow):
             'Resume':    A(u'暂停(&E)',      self.pause,     QKeySequence('F6'),           'pause.png'),
             'Stop':      A(u'停止(&S)',      self.stop,      QKeySequence('F12'),          'stop.png'),
             'About':     A(u'关于(&A)',      self.about),
-            'AddVisualization':
-                A(u'添加可视化变量(&A)', self.addVisualization, QKeySequence('F2')),
+            'AddVis':    A(u'添加可视化变量(&A)', self.addVisualization, QKeySequence('F2')),
         }
-        self.__dict__.update({'action%s' % k: v for k, v in actions.items()})
 
     def createMenus(self):
-        map(lambda m: addActionsTo(self.menuBar().addMenu(m[0]), m[1]), [
-            (u'文件(&F)', [
-                self.actionNew,     self.actionOpen,        None,
-                self.actionClose,   self.actionCloseAll,    None,
-                self.actionSave,    self.actionSaveAll,     None,
-                self.actionQuit
-            ]),
-            (u'编辑(&E)', [
-                self.actionUndo,    self.actionRedo,        None,
-                self.actionCut,     self.actionCopy,        self.actionPaste,   None,
-                self.actionSeleteAll
-            ]),
-            (u'开始(&S)', [
-                self.actionRun,     self.actionStep,        self.actionResume,  self.actionStop,    None,
-                self.actionAddVisualization
-            ]),
-            (u'帮助(&H)', [
-                self.actionAbout
-            ])
+        map(lambda m: self.addActionsTo(self.menuBar().addMenu(m[0]), m[1]), [
+            (u'文件(&F)', 'New  Open | Close CloseAll | Save SaveAll | Quit'),
+            (u'编辑(&E)', 'Undo Redo | Cut Copy Paste | SeleteAll'),
+            (u'开始(&S)', 'Run Step Resume Stop | AddVis'),
+            (u'帮助(&H)', 'About')
         ])
 
     def createToolBars(self):
-        map(lambda m: addActionsTo(self.addToolBar(m[0]), m[1]), [
-            (u'文件', [
-                self.actionNew,     self.actionOpen,        None,
-                self.actionClose,   self.actionCloseAll,    None,
-                self.actionSave,    self.actionSaveAll,
-            ]),
-            (u'编辑', [
-                self.actionUndo,    self.actionRedo,        None,
-                self.actionCut,     self.actionCopy,        self.actionPaste,
-            ]),
-            (u'开始', [
-                self.actionRun,     self.actionStep,        self.actionResume,  self.actionStop,
-            ]),
+        map(lambda m: self.addActionsTo(self.addToolBar(m[0]), m[1]), [
+            (u'文件', 'New  Open | Close CloseAll | Save SaveAll'),
+            (u'编辑', 'Undo Redo | Cut Copy Paste'),
+            (u'开始', 'Run Step Resume Stop'),
         ])
 
     def createContextMenu(self):
         self.context_menu = QMenu(u'Context Menu')
-        addActionsTo(self.context_menu, [
-            self.actionUndo,        self.actionRedo,    None,
-            self.actionCut,         self.actionCopy,    self.actionPaste,   None,
-            self.actionSeleteAll,   None,
-            self.actionAddVisualization
-        ])
+        self.addActionsTo(self.context_menu, 'Undo Redo | Cut Copy Paste | SeleteAll | AddVis')
 
     def createSlider(self):
         toolbar = self.addToolBar(u'滑动条')
@@ -221,12 +190,12 @@ class MainWindow(QMainWindow):
         return self.tabWidget.currentWidget()
 
     def checkTab(method):
-        def decorated(*args, **kwds):
-            tab = args[0].currentTab()
+        def decorated(main_window, *args, **kwds):
+            tab = main_window.currentTab()
             if not tab:
                 return False
             method.func_globals['tab'] = tab
-            return method(*args, **kwds)
+            return method(main_window, *args, **kwds)
         return decorated
 
     @checkTab
@@ -320,7 +289,7 @@ class MainWindow(QMainWindow):
 
     @checkTab
     def onLineCallback(self, frame):
-        # print "onLineCallback in", int(QThread.currentThreadId()), 'on',
+        # print 'onLineCallback in', int(QThread.currentThreadId()), 'on',
         # time()
         tab.editor.highlightLine(frame.f_lineno - 1)
         for v in tab.board.getVisualizations():
@@ -361,7 +330,7 @@ class MainWindow(QMainWindow):
 
     @checkTab
     def run(self, step_mode=False):
-        print "run in", int(QThread.currentThreadId()), 'on', time()
+        print 'run in', int(QThread.currentThreadId()), 'on', time()
         if not self.debugger or not self.debugger.running:
             script = qstring2str(tab.editor.text())
             self.debugger = Debugger(

@@ -13,6 +13,7 @@ class TreeNode(object):
     def grandparent(self):
         return self.parent and self.parent.parent
 
+    @property
     def children(self):
         return iter()
 
@@ -37,7 +38,7 @@ class TreeNode(object):
         painter.drawText(rect, Qt.AlignCenter, str(self.data))
 
     def get_height(self):
-        return max(node.get_height() if node else 0 for node in self.children()) + 1
+        return max(node.get_height() if node else 0 for node in self.children) + 1
 
 
 class BinaryTreeNode(TreeNode):
@@ -60,6 +61,7 @@ class BinaryTreeNode(TreeNode):
             return None
         return self.parent.right if self.parent.left == self else self.parent.left
 
+    @property
     def children(self):
         yield self.left
         yield self.right

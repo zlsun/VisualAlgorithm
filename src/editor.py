@@ -40,10 +40,8 @@ class Editor(QsciScintilla):
 
     def highlightLine(self, lineno):
         self.setSelection(
-            lineno,
-            0,
-            lineno,
-            len(self.text(lineno).replace('\r', '').replace('\n', ''))
+            lineno, 0,
+            lineno, len(self.text(lineno).replace('\r', '').replace('\n', ''))
         )
 
     def clearSelection(self):
