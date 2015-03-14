@@ -54,4 +54,4 @@ docs/_build/
 
 .ipynb_checkpoints/
 *.spec
-*.sublime-workspace
+*.sublime-*
