@@ -358,7 +358,7 @@ class MainWindow(QMainWindow):
 
     @checkTab
     def addVisualization(self):
-        tab.board.addVisualization(tab.editor.selectedText())
+        tab.board.addVisualization(qstring2str(tab.editor.selectedText()))
 
     def about(self):
         msgBox = QMessageBox()
