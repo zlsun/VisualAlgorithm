@@ -92,7 +92,7 @@ class RBTreeNode(BinaryTreeNode):
         BinaryTreeNode.__init__(self, data, parent)
         self.color = color
 
-    def __nonzero__(self):
+    def __bool__(self):
         return self != None and self != self.NIL
 
     def get_pen(self, tree):

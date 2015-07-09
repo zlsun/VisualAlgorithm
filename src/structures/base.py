@@ -16,7 +16,7 @@ class Base(object):
         self.bind_colors[name] = color
 
     def update_bind(self, f_globals, f_locals):
-        for name in self.bind_vars.keys():
+        for name in self.bind_vars:
             if name in f_locals:
                 self.bind_vars[name] = f_locals[name]
                 continue
@@ -33,7 +33,7 @@ class Base(object):
         return None
 
     def get_brush(self, value):
-        for name in self.bind_vars.keys():
+        for name in self.bind_vars:
             if self.bind_vars[name] == value:
                 return QColor(self.bind_colors[name])
         return None

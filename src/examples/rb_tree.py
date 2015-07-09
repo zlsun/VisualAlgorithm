@@ -33,7 +33,7 @@ def tree_insert_node(tree, z):
 
 def insert_case(tree, z):
     # Initally, z.color is RED
-    # 
+    #
     # Case 1: z is root
     if not z.parent:
         # change z.color to BLACK
@@ -41,11 +41,11 @@ def insert_case(tree, z):
         return
     # Case 2: z.parent.color is BLACK, OK
     if z.parent.color == BLACK:
-        return 
-    # 
+        return
+    #
     # Now, z.parent.color is RED, so z must have a grandparent.
     # The colors of z and z.parent are both RED which is not allowed, we should deal with it.
-    # 
+    #
     # Case 3: z.uncle.color is RED
     if z.uncle and z.uncle.color == RED:
         # invert the colors of z.parent, z.uncle and z.grandparent
@@ -57,7 +57,7 @@ def insert_case(tree, z):
         return
     #
     # Now, z has no uncle or z.uncle.color is BLACK
-    # 
+    #
     # Case 4:
     if z == z.parent.right and z.parent == z.grandparent.left:
         # exchange the role of z and z.parent
@@ -99,10 +99,10 @@ def tree_delete(tree, data):
         return True
     else:
         return False
-    
+
 def tree_delete_one_child_node(tree, z):
     child = z.left if z.left else z.right
-    
+
     if not z.parent and not child:
         tree.root = None
         return
@@ -112,7 +112,7 @@ def tree_delete_one_child_node(tree, z):
         child.color = BLACK
         tree.root = child
         return
-    
+
     if z.parent.left == z:
         z.parent.left = child
     else:
@@ -126,9 +126,9 @@ def tree_delete_one_child_node(tree, z):
             delete_case(tree, child)
 
 def delete_case(tree, x):
-    # 
+    #
     # Initally, x.color is BLACK
-    # 
+    #
     # Case 1: x is root
     if not x.parent:
         return
@@ -202,3 +202,4 @@ sleep(1)
 
 for i in lst:
     tree_delete(tree, i)
+

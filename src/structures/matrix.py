@@ -35,7 +35,7 @@ class Matrix(Base):
         if color:
             return color
         data = self[pos]
-        if self.color_map.has_key(data):
+        if data in self.color_map:
             return QColor(self.color_map[data])
         return QColor(0x808080)
 

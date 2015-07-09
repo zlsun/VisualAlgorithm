@@ -57,7 +57,7 @@ sleep(1)
 
 def merge_sort(L, p=0, r=n - 1):
     if p < r:
-        mid = (p + r) / 2
+        mid = (p + r) // 2
         merge_sort(L, p, mid)
         merge_sort(L, mid + 1, r)
         L1 = L[p : mid + 1]

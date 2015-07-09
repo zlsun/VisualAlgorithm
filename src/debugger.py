@@ -75,15 +75,15 @@ class Debugger(QThread):
             self.stop()
 
     def pause(self):
-        print "pause in", int(QThread.currentThreadId()), 'on', time()
+        print("pause in", int(QThread.currentThreadId()), 'on', time())
         self.active = False
 
     def resume(self, step_mode=False):
-        print "resume in", int(QThread.currentThreadId()), 'on', time()
+        print("resume in", int(QThread.currentThreadId()), 'on', time())
         self.step_mode = step_mode
         self.active = True
 
     def stop(self):
-        print "stop in", int(QThread.currentThreadId()), 'on', time()
+        print("stop in", int(QThread.currentThreadId()), 'on', time())
         self.running = False
         self.onQuit.emit()
