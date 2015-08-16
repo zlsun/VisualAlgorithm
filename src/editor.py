@@ -1,7 +1,8 @@
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from PyQt4.Qsci import (
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from PyQt5.Qsci import (
     QsciScintilla,
     QsciLexerPython
 )
@@ -53,3 +54,4 @@ class Editor(QsciScintilla):
     def onContextMenuRequested(self, coord):
         if self.context_menu:
             self.context_menu.popup(self.mapToGlobal(coord))
+

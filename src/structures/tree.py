@@ -161,3 +161,4 @@ class Tree(Base):
         painter.translate(w / 2, 0)
         painter.scale(1, 1)
         self.root.plot(self, painter, w, layer_height)
+

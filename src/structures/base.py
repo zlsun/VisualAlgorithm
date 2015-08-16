@@ -1,6 +1,6 @@
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
 
 class Base(object):
 
@@ -37,3 +37,4 @@ class Base(object):
             if self.bind_vars[name] == value:
                 return QColor(self.bind_colors[name])
         return None
+

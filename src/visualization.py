@@ -1,6 +1,6 @@
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
 
 from structures import *
 
@@ -22,3 +22,4 @@ class Visualization(QWidget):
         self.value = value
         self.value.update_bind(f_globals, f_locals)
         self.update()
+

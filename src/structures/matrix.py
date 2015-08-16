@@ -61,3 +61,4 @@ class Matrix(Base):
                 painter.drawRect(x, y, tile_size, tile_size)
                 x += tile_size
             y += tile_size
+

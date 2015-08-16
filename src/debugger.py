@@ -4,7 +4,7 @@ import sys
 from bdb import Bdb
 from time import time, sleep
 
-from PyQt4.QtCore import *
+from PyQt5.QtCore import *
 
 
 class Sdb(Bdb):
@@ -37,21 +37,21 @@ class Debugger(QThread):
 
     def __init__(self, script, timeout=500, step_mode=False):
         QThread.__init__(self)
-        self.script    = script
+        self.script = script
         self.step_mode = step_mode
-        self.active    = False
-        self.running   = False
-        self.sdb       = Sdb()
+        self.active = False
+        self.running = False
+        self.sdb = Sdb()
         self.sdb.set_line_handler(self.lineHandler)
         self.setTimeout(timeout)
         self.onQuit.connect(self.sdb.set_quit)
 
-    onLineCallback  = pyqtSignal(object)
-    onException     = pyqtSignal(object)
-    onQuit          = pyqtSignal()
+    onLineCallback = pyqtSignal(object)
+    onException = pyqtSignal(object)
+    onQuit = pyqtSignal()
 
     def lineHandler(self, frame):
-        # print "line_handler in", int(QThread.currentThreadId()), 'on', time()
+        # print("line_handler in", int(QThread.currentThreadId()), 'on', time())
         self.onLineCallback.emit(frame)
         if self.step_mode:
             self.active = False
@@ -64,7 +64,7 @@ class Debugger(QThread):
         self.timeout = timeout / 1000.0
 
     def run(self):
-        # print "run in", int(QThread.currentThreadId()), 'on', time()
+        # print("run in", int(QThread.currentThreadId()), 'on', time())
         self.active = True
         self.running = True
         try:
@@ -87,3 +87,4 @@ class Debugger(QThread):
         print("stop in", int(QThread.currentThreadId()), 'on', time())
         self.running = False
         self.onQuit.emit()
+

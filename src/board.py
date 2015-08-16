@@ -1,6 +1,6 @@
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
 
 from visualization import Visualization
 
@@ -20,3 +20,4 @@ class Board(QMdiArea):
 
     def getVisualizations(self):
         return (w.widget() for w in self.subWindowList())
+

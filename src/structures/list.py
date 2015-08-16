@@ -30,3 +30,4 @@ class List(Base, list):
             height = self[i] * h / mh
             painter.drawRect(x, - height, wi, height)
             x += wi
+

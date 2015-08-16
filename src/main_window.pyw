@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 #-*- encoding: utf-8 -*-
 
+import os
 from time import time
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui  import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui  import *
+from PyQt5.QtWidgets import *
 
-from debugger   import Debugger
-from editor     import Editor
-from board      import Board
+from debugger import Debugger
+from editor import Editor
+from board import Board
 from structures import Base
 
 DEBUG = True
@@ -17,8 +19,8 @@ ENCODING = 'utf-8'
 
 APP_NAME      = 'VisualAlgorithm'
 UNTITLED      = 'Untitled.py'
-ICONS_PATH    = './icons/'
-APP_ICON_PATH = ICONS_PATH + 'icon.png'
+ICONS_DIR     = './icons/'
+APP_ICON_PATH = os.path.join(ICONS_DIR, 'icon.png')
 
 
 def strippedName(filePath):
@@ -34,11 +36,11 @@ class MainWindow(QMainWindow):
 
         if DEBUG:
             for f, v in [
-                    ('sort', 'L'),
-                    ('maze', 'maze'),
-                    ('binary_tree', 'tree'),
-                    ('rb_tree', 'tree')
-                ]:
+                ('sort', 'L'),
+                ('maze', 'maze'),
+                ('binary_tree', 'tree'),
+                ('rb_tree', 'tree')
+            ]:
                 filePath = './examples/%s.py' % f
                 tab = self.addTab(strippedName(filePath))
                 tab.filePath = filePath
@@ -86,7 +88,7 @@ class MainWindow(QMainWindow):
         tab.editor.cursorPositionChanged.connect(
             lambda line, index:
                 self.indicatorLabel.setText(
-                    '第 %d 行, 第 %d 列' % (line + 1, index + 1)
+                    '第 {} 行, 第 {} 列'.format(line + 1, index + 1)
                 )
         )
         tab.editor.modificationChanged.connect(
@@ -116,62 +118,66 @@ class MainWindow(QMainWindow):
     def createActions(self):
         def A(text, slot, shortcut=None, icon=None):
             action = QAction(text, self)
-            self.connect(action, SIGNAL('triggered()'), slot)
+            action.triggered.connect(slot)
             if shortcut:
                 action.setShortcut(shortcut)
                 action.setToolTip(
-                    '%s (%s)' % (
+                    '{} ({})'.format(
                         text[:text.find('(')].replace('...', ''),
                         action.shortcut().toString()
                     )
                 )
             if icon:
-                action.setIcon(QIcon(ICONS_PATH + icon))
+                action.setIcon(QIcon(os.path.join(ICONS_DIR, icon)))
             return action
 
         self.actions = {
-            'New':       A('新建(&N)',      self.newFile,   QKeySequence.New,             'new.png'),
-            'Open':      A('打开...(&O)',   self.openFiles, QKeySequence.Open,            'open.png'),
-            'Close':     A('关闭(&C)',      self.closeFile, QKeySequence('ctrl+w'),       'close.png'),
-            'CloseAll':  A('关闭全部(&E)',  self.closeAll,  QKeySequence('ctrl+shift+w'), 'closeAll.png'),
-            'Save':      A('保存(&S)',      self.saveFile,  QKeySequence.Save,            'fileSave.png'),
-            'SaveAll':   A('另存为...(&A)', self.saveAs,    QKeySequence('ctrl+shift+s'), 'fileSaveAs.png'),
-            'Quit':      A('退出(&Q)',      self.close,     QKeySequence('ctrl+q')),
-            'Undo':      A('撤销(&U)',      self.undo,      QKeySequence.Undo,            'editUndo.png'),
-            'Redo':      A('重做(&R)',      self.redo,      QKeySequence.Redo,            'editRedo.png'),
-            'Cut':       A('剪切(&X)',      self.cut,       QKeySequence.Cut,             'editCut.png'),
-            'Copy':      A('复制(&C)',      self.copy,      QKeySequence.Copy,            'editCopy.png'),
-            'Paste':     A('粘贴(&P)',      self.paste,     QKeySequence.Paste,           'editPaste.png'),
-            'SeleteAll': A('全选(&A)',      self.selectAll, QKeySequence.SelectAll),
-            'Run':       A('运行(&R)',      self.run,       QKeySequence('F5'),           'run.png'),
-            'Step':      A('单步(&P)',      self.step,      QKeySequence('F11'),          'step.png'),
-            'Resume':    A('暂停(&E)',      self.pause,     QKeySequence('F6'),           'pause.png'),
-            'Stop':      A('停止(&S)',      self.stop,      QKeySequence('F12'),          'stop.png'),
-            'About':     A('关于(&A)',      self.about),
-            'AddVis':    A('添加可视化变量(&A)', self.addVisualization, QKeySequence('F2')),
+            'New'       : A('新建(&N)',      self.newFile,   QKeySequence.New,             'new.png'       ),
+            'Open'      : A('打开...(&O)',   self.openFiles, QKeySequence.Open,            'open.png'      ),
+            'Close'     : A('关闭(&C)',      self.closeFile, QKeySequence.Close,           'close.png'     ),
+            'CloseAll'  : A('关闭全部(&E)',  self.closeAll,  QKeySequence('ctrl+shift+w'), 'closeAll.png'  ),
+            'Save'      : A('保存(&S)',      self.saveFile,  QKeySequence.Save,            'fileSave.png'  ),
+            'SaveAll'   : A('另存为...(&A)', self.saveAs,    QKeySequence('ctrl+shift+s'), 'fileSaveAs.png'),
+            'Quit'      : A('退出(&Q)',      self.close,     QKeySequence('ctrl+q')                        ),
+            'Undo'      : A('撤销(&U)',      self.undo,      QKeySequence.Undo,            'editUndo.png'  ),
+            'Redo'      : A('重做(&R)',      self.redo,      QKeySequence.Redo,            'editRedo.png'  ),
+            'Cut'       : A('剪切(&X)',      self.cut,       QKeySequence.Cut,             'editCut.png'   ),
+            'Copy'      : A('复制(&C)',      self.copy,      QKeySequence.Copy,            'editCopy.png'  ),
+            'Paste'     : A('粘贴(&P)',      self.paste,     QKeySequence.Paste,           'editPaste.png' ),
+            'SeleteAll' : A('全选(&A)',      self.selectAll, QKeySequence.SelectAll                        ),
+            'Run'       : A('运行(&R)',      self.run,       QKeySequence('F5'),           'run.png'       ),
+            'Step'      : A('单步(&P)',      self.step,      QKeySequence('F11'),          'step.png'      ),
+            'Resume'    : A('暂停(&E)',      self.pause,     QKeySequence('F6'),           'pause.png'     ),
+            'Stop'      : A('停止(&S)',      self.stop,      QKeySequence('F12'),          'stop.png'      ),
+            'About'     : A('关于(&A)',      self.about                                                    ),
+            'AddVis'    : A('添加可视化变量(&A)', self.addVisualization, QKeySequence('F2')                ),
         }
 
     def createMenus(self):
-        list(map(lambda m: self.addActionsTo(self.menuBar().addMenu(m[0]), m[1]), [
+        menus = [
             ('文件(&F)', 'New  Open | Close CloseAll | Save SaveAll | Quit'),
             ('编辑(&E)', 'Undo Redo | Cut Copy Paste | SeleteAll'),
             ('开始(&S)', 'Run Step Resume Stop | AddVis'),
             ('帮助(&H)', 'About')
-        ]))
+        ]
+        for m in menus:
+            self.addActionsTo(self.menuBar().addMenu(m[0]), m[1])
 
     def createToolBars(self):
-        list(map(lambda m: self.addActionsTo(self.addToolBar(m[0]), m[1]), [
+        bars = [
             ('文件', 'New  Open | Close CloseAll | Save SaveAll'),
             ('编辑', 'Undo Redo | Cut Copy Paste'),
             ('开始', 'Run Step Resume Stop'),
-        ]))
+        ]
+        for m in bars:
+            self.addActionsTo(self.addToolBar(m[0]), m[1])
 
     def createContextMenu(self):
         self.context_menu = QMenu('Context Menu')
         self.addActionsTo(self.context_menu, 'Undo Redo | Cut Copy Paste | SeleteAll | AddVis')
 
     def createSlider(self):
-        toolbar = self.addToolBar('滑动条')
+        toolbar = self.addToolBar('slider')
         self.slider = QSlider(Qt.Horizontal)
         self.sliderLabel = QLabel()
         toolbar.addWidget(self.slider)
@@ -201,7 +207,7 @@ class MainWindow(QMainWindow):
     def maybeSave(self):
         if tab.editor.isModified():
             msgBox = QMessageBox()
-            msgBox.setText('文件 %s 已被修改' % strippedName(tab.filePath))
+            msgBox.setText('文件 {} 已被修改'.format(strippedName(tab.filePath)))
             msgBox.setInformativeText('你想保存吗?')
             btnSave    = msgBox.addButton('保存(&S)', QMessageBox.YesRole)
             btnDiscard = msgBox.addButton('丢弃(&D)', QMessageBox.NoRole)
@@ -215,7 +221,7 @@ class MainWindow(QMainWindow):
         return True
 
     def setTimeout(self, timeout):
-        self.sliderLabel.setText('%dms' % timeout)
+        self.sliderLabel.setText('{}ms'.format(timeout))
         if self.debugger:
             self.debugger.setTimeout(timeout)
 
@@ -281,14 +287,14 @@ class MainWindow(QMainWindow):
             self.tabWidget.currentIndex(), strippedName(tab.filePath))
         return self.saveTab(tab)
 
-    for f in ['undo', 'redo', 'cut', 'copy', 'paste', 'selectAll']:
-        locals()[f] = checkTab(
-            lambda self, f=f: tab.editor.__getattribute__(f)()
+    for a in ['undo', 'redo', 'cut', 'copy', 'paste', 'selectAll']:
+        locals()[a] = checkTab(
+            lambda self, a=a: tab.editor.__getattribute__(a)()
         )
 
     @checkTab
     def onLineCallback(self, frame):
-        # print 'onLineCallback in', int(QThread.currentThreadId()), 'on', time()
+        # print('onLineCallback in', int(QThread.currentThreadId()), 'on', time())
         tab.editor.highlightLine(frame.f_lineno - 1)
         for v in tab.board.getVisualizations():
             f_globals = frame.f_globals
@@ -371,7 +377,7 @@ class MainWindow(QMainWindow):
             <br/>
             <p align='center'> Copyright (c) zlsun </p>
         ''')
-        msgBox.setButtonText(QMessageBox.Ok, '关闭(&C)')
+        msgBox.addButton('关闭(&C)', QMessageBox.AcceptRole)
         msgBox.exec_()
 
     def closeEvent(self, event):
