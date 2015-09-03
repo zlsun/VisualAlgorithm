@@ -20,7 +20,7 @@ ENCODING = 'utf-8'
 APP_NAME      = 'VisualAlgorithm'
 UNTITLED      = 'Untitled.py'
 ICONS_DIR     = './icons/'
-APP_ICON_PATH = os.path.join(ICONS_DIR, 'icon.png')
+APP_ICON_PATH = os.path.join(ICONS_DIR, 'icon.ico')
 
 
 def strippedName(filePath):
@@ -41,7 +41,7 @@ class MainWindow(QMainWindow):
                 ('binary_tree', 'tree'),
                 ('rb_tree', 'tree')
             ]:
-                filePath = './examples/%s.py' % f
+                filePath = './examples/{}.py'.format(f)
                 tab = self.addTab(strippedName(filePath))
                 tab.filePath = filePath
                 with open(filePath, 'r', encoding=ENCODING) as f:
@@ -229,7 +229,7 @@ class MainWindow(QMainWindow):
         self.addTab(UNTITLED)
 
     def openFiles(self):
-        filePaths = QFileDialog.getOpenFileNames(
+        filePaths, _ = QFileDialog.getOpenFileNames(
             self,
             caption='打开文件',
             filter='Python文件 (*.py *.pyw);;所有文件 (*.*)'
