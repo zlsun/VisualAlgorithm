@@ -287,7 +287,7 @@ class MainWindow(QMainWindow):
             self.tabWidget.currentIndex(), strippedName(tab.filePath))
         return self.saveTab(tab)
 
-    for a in ['undo', 'redo', 'cut', 'copy', 'paste', 'selectAll']:
+    for a in 'undo redo cut copy paste selectAll'.split():
         locals()[a] = checkTab(
             lambda self, a=a: tab.editor.__getattribute__(a)()
         )
