@@ -4,7 +4,7 @@
 all: run
 
 clean:
-	rm -rf dist/
+	@rm -rf dist/
 
 run:
 	@cd src && ./main_window.pyw
@@ -14,7 +14,7 @@ dist: clean
 	ln -s src/examples/ dist/examples/
 	ln -s src/icons/    dist/icons/
 
-counter:
+wordcount:
 	@echo "Lines|Words|Bytes|File"
 	@echo "=====|=====|=====|=============================="
 	@wc src/*.py* src/*/*.py
