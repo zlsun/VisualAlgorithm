@@ -26,3 +26,7 @@ cd VisualAlgorithm
 make
 ```
 
+## License
+
+[MIT License](LICENSE)
+
