@@ -48,7 +48,7 @@ class MainWindow(QMainWindow):
                     data = f.read()
                     tab.editor.setText(data)
                     tab.editor.setModified(False)
-                    tab.board.addVisualization(v)
+                    tab.board.addVar(v)
 
     def setupUi(self):
         self.resize(800, 600)
@@ -69,6 +69,7 @@ class MainWindow(QMainWindow):
         self.tabWidget.setMovable(True)
         self.tabWidget.setTabsClosable(True)
         self.tabWidget.tabCloseRequested.connect(self.closeFile)
+        self.tabWidget.currentChanged.connect(lambda index: self.stop())
 
         layout.addWidget(self.tabWidget)
         self.setCentralWidget(self.centralWidget)
@@ -118,7 +119,7 @@ class MainWindow(QMainWindow):
     def createActions(self):
         def A(text, slot, shortcut=None, icon=None):
             action = QAction(text, self)
-            action.triggered.connect(slot)
+            action.triggered.connect(lambda checked: slot())
             if shortcut:
                 action.setShortcut(shortcut)
                 action.setToolTip(
@@ -146,11 +147,12 @@ class MainWindow(QMainWindow):
             'Paste'     : A('粘贴(&P)',      self.paste,     QKeySequence.Paste,           'editPaste.png' ),
             'SeleteAll' : A('全选(&A)',      self.selectAll, QKeySequence.SelectAll                        ),
             'Run'       : A('运行(&R)',      self.run,       QKeySequence('F5'),           'run.png'       ),
-            'Step'      : A('单步(&P)',      self.step,      QKeySequence('F11'),          'step.png'      ),
-            'Resume'    : A('暂停(&E)',      self.pause,     QKeySequence('F6'),           'pause.png'     ),
-            'Stop'      : A('停止(&S)',      self.stop,      QKeySequence('F12'),          'stop.png'      ),
+            'Step'      : A('单步(&P)',      self.step,      QKeySequence('F6'),           'step.png'      ),
+            'Resume'    : A('暂停(&E)',      self.pause,     QKeySequence('F7'),           'pause.png'     ),
+            'Stop'      : A('停止(&S)',      self.stop,      QKeySequence('F8'),           'stop.png'      ),
+            'AddVis'    : A('添加变量(&A)',  self.addVar,    QKeySequence('F9')                            ),
+            'Help'      : A('帮助(&H)',      self.help,      QKeySequence('F1')                            ),
             'About'     : A('关于(&A)',      self.about                                                    ),
-            'AddVis'    : A('添加可视化变量(&A)', self.addVisualization, QKeySequence('F2')                ),
         }
 
     def createMenus(self):
@@ -158,7 +160,7 @@ class MainWindow(QMainWindow):
             ('文件(&F)', 'New  Open | Close CloseAll | Save SaveAll | Quit'),
             ('编辑(&E)', 'Undo Redo | Cut Copy Paste | SeleteAll'),
             ('开始(&S)', 'Run Step Resume Stop | AddVis'),
-            ('帮助(&H)', 'About')
+            ('帮助(&H)', 'Help About')
         ]
         for m in menus:
             self.addActionsTo(self.menuBar().addMenu(m[0]), m[1])
@@ -296,7 +298,7 @@ class MainWindow(QMainWindow):
     def onLineCallback(self, frame):
         # print('onLineCallback in', int(QThread.currentThreadId()), 'on', time())
         tab.editor.highlightLine(frame.f_lineno - 1)
-        for v in tab.board.getVisualizations():
+        for v in tab.board.getVars():
             f_globals = frame.f_globals
             f_locals = frame.f_locals
             name = v.name
@@ -334,7 +336,7 @@ class MainWindow(QMainWindow):
 
     @checkTab
     def run(self, step_mode=False):
-        print('run in', int(QThread.currentThreadId()), 'on', time())
+        # print('run in', int(QThread.currentThreadId()), 'on', time())
         if not self.debugger or not self.debugger.running:
             script = tab.editor.text()
             self.debugger = Debugger(
@@ -361,8 +363,24 @@ class MainWindow(QMainWindow):
             self.debugger.stop()
 
     @checkTab
-    def addVisualization(self):
-        tab.board.addVisualization(tab.editor.selectedText())
+    def addVar(self):
+        tab.board.addVar(tab.editor.selectedText())
+
+    def help(self):
+        msgBox = QMessageBox()
+        msgBox.setWindowTitle("帮助")
+        msgBox.setText('''
+        <h1> 使用方法 </h1>
+        <ol>
+            <li> 点击“文件”—“打开”，打开要运行的算法文件，本软件自带示例在 examples 文件夹下。 </li>
+            <li> 在左侧的编辑器中，选中要可视化的数据结构变量名，右键—“添加变量”。</li>
+            <li> 点击工具栏上的“运行”按钮，开始执行算法。在算法运行过程中，
+                 可以通过工具栏进行暂停、单步运行、停止以及调整运行速度等操作。
+            </li>
+        </ol>
+        ''')
+        msgBox.addButton('关闭(&C)', QMessageBox.AcceptRole)
+        msgBox.exec_()
 
     def about(self):
         msgBox = QMessageBox()

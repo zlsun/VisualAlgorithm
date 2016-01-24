@@ -16,7 +16,9 @@ class Visualization(QWidget):
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
-        self.value.draw(self, painter)
+        draw = getattr(self.value, "draw", None)
+        if callable(draw):
+            draw(self, painter)
 
     def updateValue(self, value, f_globals, f_locals):
         self.value = value

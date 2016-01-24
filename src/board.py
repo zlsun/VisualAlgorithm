@@ -12,12 +12,12 @@ class Board(QMdiArea):
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
 
-    def addVisualization(self, name):
+    def addVar(self, name):
         widget = Visualization(name)
         widget.setWindowTitle(name)
         self.addSubWindow(widget)
         widget.show()
 
-    def getVisualizations(self):
+    def getVars(self):
         return (w.widget() for w in self.subWindowList())
 

@@ -54,4 +54,3 @@ class Editor(QsciScintilla):
     def onContextMenuRequested(self, coord):
         if self.context_menu:
             self.context_menu.popup(self.mapToGlobal(coord))
-

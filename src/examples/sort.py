@@ -5,7 +5,7 @@ from random import randrange
 
 from structures import List
 
-N = 100
+N = 20
 lst = [randrange(N) for _ in range(N)]
 L = List(lst)
 n = len(L)

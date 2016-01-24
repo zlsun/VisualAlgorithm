@@ -8,6 +8,12 @@ class List(Base, list):
         Base.__init__(self)
         list.__init__(self, value)
 
+    def __getitem__(self, i):
+        item = list.__getitem__(self, i)
+        if isinstance(item, list):
+            item = List(item)
+        return item
+
     def get_pen(self, index):
         return Base.get_pen(self, index) or QColor(0x000000)
 
