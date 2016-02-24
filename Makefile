@@ -1,5 +1,5 @@
 
-.PHONY: all clean run dist counter
+.PHONY: all clean run dist wc
 
 all: run
 
@@ -14,8 +14,8 @@ dist: clean
 	ln -s src/examples/ dist/examples/
 	ln -s src/icons/    dist/icons/
 
-wordcount:
+wc:
 	@echo "Lines|Words|Bytes|File"
-	@echo "=====|=====|=====|=============================="
-	@wc src/*.py* src/*/*.py
+	@echo "================================================"
+	@wc src/*.py{,w} src/*/*.py
 
