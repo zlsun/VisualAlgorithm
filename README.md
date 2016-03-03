@@ -4,8 +4,20 @@ My scolar project providing a visual way to show how algorithms works.
 
 ## Screenshots
 
-![](https://raw.githubusercontent.com/zlsun/screenshots/master/VisualAlgorithm/1.png)
-![](https://raw.githubusercontent.com/zlsun/screenshots/master/VisualAlgorithm/2.png)
+<table>
+    <tr>
+        <td width="50%">
+            <a href="https://raw.githubusercontent.com/zlsun/screenshots/master/VisualAlgorithm/1.png">
+                <img src="https://raw.githubusercontent.com/zlsun/screenshots/master/VisualAlgorithm/1.png" width="100%">
+            </a>
+        </td>
+        <td width="50%">
+            <a href="https://raw.githubusercontent.com/zlsun/screenshots/master/VisualAlgorithm/2.png">
+                <img src="https://raw.githubusercontent.com/zlsun/screenshots/master/VisualAlgorithm/2.png" width="100%">
+            </a>
+        </td>
+    </tr>
+</table>
 
 ## Dependencies
 
