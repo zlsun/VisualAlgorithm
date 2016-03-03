@@ -1,6 +1,6 @@
 # VisualAlgorithm
 
-My scolar project providing a visual way to show how algorithms works.
+My course project providing a visual way to show how algorithms works.
 
 ## Screenshots
 
