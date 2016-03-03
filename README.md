@@ -2,6 +2,11 @@
 
 My scolar project providing a visual way to show how algorithms works.
 
+## Screenshots
+
+![](https://raw.githubusercontent.com/zlsun/screenshots/master/VisualAlgorithm/1.png)
+![](https://raw.githubusercontent.com/zlsun/screenshots/master/VisualAlgorithm/2.png)
+
 ## Dependencies
 
 - Python 3
